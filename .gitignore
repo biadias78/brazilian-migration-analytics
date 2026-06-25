@@ -1,0 +1,30 @@
+# Ignore local data files and generated DuckDB database
+/data/
+/duckdb/
+
+# Python cache and environment
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+venv/
+.venv/
+
+# Virtual environments and build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# IDE and editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jupyter notebooks
+.ipynb_checkpoints/
+
+# Logs
+*.log
