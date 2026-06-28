@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: dim_brazil_outflow_totals_by_year
+    description: "Annual Brazil outflow summary, aggregating total migrants leaving Brazil by year."
+    columns:
+      - name: year
+        description: "Year of the migration outflow record."
+      - name: total_migrants
+        description: "Total migrants leaving Brazil in the year."
+      - name: total_male
+        description: "Total male migrants leaving Brazil in the year."
+      - name: total_female
+        description: "Total female migrants leaving Brazil in the year."
+      - name: male_ratio
+        description: "Share of male migrants among total Brazil outflow."
+      - name: female_ratio
+        description: "Share of female migrants among total Brazil outflow."

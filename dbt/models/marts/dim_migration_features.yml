@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: dim_migration_features
+    description: "Final predictive feature model derived from staged migration data."
+    columns:
+      - name: destination
+        description: "Destination country or region for the feature record."
+      - name: origin
+        description: "Origin country or region for the feature record."
+      - name: destination_code
+        description: "Destination location code for the feature record."
+      - name: origin_code
+        description: "Origin location code for the feature record."
+      - name: coverage
+        description: "Coverage label carried through from the staging model."
+      - name: data_type
+        description: "Migration stock data type carried through from the staging model."
+      - name: year
+        description: "Year associated with the migration feature record."
+      - name: total
+        description: "Total migrant stock for the feature record."
+      - name: male
+        description: "Male migrant stock count for the feature record."
+      - name: female
+        description: "Female migrant stock count for the feature record."
+      - name: male_ratio
+        description: "Share of the total population that is male."
+      - name: female_ratio
+        description: "Share of the total population that is female."
+      - name: sex_difference
+        description: "Difference between male and female counts."
+      - name: sex_difference_ratio
+        description: "Sex difference normalized by total population."

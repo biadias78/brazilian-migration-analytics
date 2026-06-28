@@ -1,0 +1,9 @@
+brazilian_migration:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: duckdb/brazil_migration.duckdb
+      schema: analytics
+      threads: 1
+      connection_parameters: {}

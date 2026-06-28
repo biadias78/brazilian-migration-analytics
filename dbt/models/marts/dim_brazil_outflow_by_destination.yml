@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: dim_brazil_outflow_by_destination
+    description: "Brazil outflow by destination country and year, used to identify the top destinations for migrants leaving Brazil."
+    columns:
+      - name: destination
+        description: "Destination country or region for migrants leaving Brazil."
+      - name: destination_code
+        description: "Destination location code for migrants leaving Brazil."
+      - name: year
+        description: "Year of the migration record."
+      - name: total_migrants
+        description: "Total migrants leaving Brazil for this destination in the year."
+      - name: total_male
+        description: "Total male migrants leaving Brazil for this destination in the year."
+      - name: total_female
+        description: "Total female migrants leaving Brazil for this destination in the year."
+      - name: male_ratio
+        description: "Share of male migrants among total migrants to this destination."
+      - name: female_ratio
+        description: "Share of female migrants among total migrants to this destination."

@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: raw_undesa_source
+    description: "Raw model that points at the source table and preserves untransformed source columns."
+    columns:
+      - name: source_index
+        description: "Original row index or source marker from the Excel file."
+      - name: destination
+        description: "Destination country or region name."
+      - name: origin
+        description: "Origin country or region name."
+      - name: coverage
+        description: "Coverage label for the observation."
+      - name: data_type
+        description: "Type of migration stock data recorded."
+      - name: destination_code
+        description: "Destination location code from the source."
+      - name: origin_code
+        description: "Origin location code from the source."
+      - name: year
+        description: "Observation year for the record."
+      - name: total
+        description: "Total migrant stock count."
+      - name: male
+        description: "Male migrant stock count."
+      - name: female
+        description: "Female migrant stock count."
+      - name: sheet_name
+        description: "Worksheet name in the source Excel file."

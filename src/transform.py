@@ -1,10 +1,19 @@
 import duckdb
 
-from .config import DB_FILE, CSV_TABLE, SUMMARY_TABLE
+from pathlib import Path
+
+from .config import (
+    CSV_TABLE,
+    SUMMARY_TABLE,
+    UNDESA_DB_FILE,
+    UNDESA_TABLE,
+    DB_FILE,
+    YEAR_SUMMARY_TABLE,
+)
 
 
-def connect() -> duckdb.DuckDBPyConnection:
-    return duckdb.connect(database=str(DB_FILE))
+def connect(db_file: Path) -> duckdb.DuckDBPyConnection:
+    return duckdb.connect(database=str(db_file))
 
 
 def normalize_name(name: str) -> str:
@@ -28,11 +37,10 @@ def describe_table(conn, table_name):
     return [row[0] for row in result]
 
 
-def create_summary_table() -> None:
-    conn = connect()
+def make_summary_table(conn, source_table: str, summary_table: str) -> None:
     conn.execute("CREATE SCHEMA IF NOT EXISTS analytics")
 
-    columns = describe_table(conn, CSV_TABLE)
+    columns = describe_table(conn, source_table)
     destination_col = pick_column(columns, ["destination", "destination region"])
     destination_code_col = pick_column(columns, ["location code of destination", "destination code"])
     origin_col = pick_column(columns, ["origin", "origin region"])
@@ -43,7 +51,6 @@ def create_summary_table() -> None:
     female_col = pick_column(columns, ["female"])
 
     if not destination_col or not origin_col or not year_col or not total_col:
-        conn.close()
         raise ValueError(
             f"Unable to detect required columns from source table: {columns}"
         )
@@ -60,16 +67,63 @@ def create_summary_table() -> None:
     ]
 
     conn.execute(
-        f"CREATE OR REPLACE TABLE {SUMMARY_TABLE} AS\n"
+        f"CREATE OR REPLACE TABLE {summary_table} AS\n"
         f"SELECT {', '.join(select_columns)}\n"
-        f"FROM {CSV_TABLE}\n"
+        f"FROM {source_table}\n"
         f"WHERE \"{total_col}\" IS NOT NULL"
     )
-    conn.close()
+
+
+def create_summary_table() -> None:
+    conn = connect(UNDESA_DB_FILE)
+    try:
+        make_summary_table(conn, UNDESA_TABLE, SUMMARY_TABLE)
+    finally:
+        conn.close()
+
+
+def quote_column(column_name: str) -> str:
+    return '"' + column_name.replace('"', '""') + '"'
+
+
+def make_year_summary_table(conn, source_table: str, summary_table: str) -> None:
+    conn.execute("CREATE SCHEMA IF NOT EXISTS analytics")
+    columns = describe_table(conn, source_table)
+
+    if "number" not in columns:
+        raise ValueError(
+            f"Unable to detect numeric count column in year-folder source table: {columns}"
+        )
+
+    group_columns = [col for col in columns if col != "number"]
+    quoted_group_columns = [quote_column(col) for col in group_columns]
+    select_columns = quoted_group_columns + ["SUM(CAST(number AS DOUBLE)) AS total"]
+
+    if quoted_group_columns:
+        conn.execute(
+            f"CREATE OR REPLACE TABLE {summary_table} AS\n"
+            f"SELECT {', '.join(select_columns)}\n"
+            f"FROM {source_table}\n"
+            f"GROUP BY {', '.join(quoted_group_columns)}"
+        )
+    else:
+        conn.execute(
+            f"CREATE OR REPLACE TABLE {summary_table} AS\n"
+            f"SELECT SUM(CAST(number AS DOUBLE)) AS total\n"
+            f"FROM {source_table}"
+        )
+
+
+def create_year_summary_table() -> None:
+    conn = connect(DB_FILE)
+    try:
+        make_year_summary_table(conn, CSV_TABLE, YEAR_SUMMARY_TABLE)
+    finally:
+        conn.close()
 
 
 def fetch_recent_trend(limit: int = 20):
-    conn = connect()
+    conn = connect(UNDESA_DB_FILE)
     result = conn.execute(
         f"SELECT destination, origin, year, total FROM {SUMMARY_TABLE} "
         f"ORDER BY total DESC LIMIT {limit}"
@@ -81,7 +135,7 @@ def fetch_recent_trend(limit: int = 20):
 
 
 def fetch_brazil_outflow(limit: int = 20, year: int | None = None):
-    conn = connect()
+    conn = connect(UNDESA_DB_FILE)
     filters = ["(lower(origin) LIKE '%brazil%' OR lower(CAST(origin_code AS VARCHAR)) = 'bra')"]
     if year is not None:
         filters.append(f"year = {int(year)}")

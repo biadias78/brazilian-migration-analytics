@@ -1,7 +1,7 @@
 import argparse
 
 from .ingest import ingest
-from .transform import create_summary_table, fetch_recent_trend, fetch_brazil_outflow
+from .transform import create_summary_table, create_year_summary_table, fetch_recent_trend, fetch_brazil_outflow
 
 
 def main() -> None:
@@ -12,8 +12,8 @@ def main() -> None:
         "mode",
         nargs="?",
         default="all",
-        choices=["ingest", "transform", "outflow", "all"],
-        help="Select which step to run: ingest, transform, outflow, or all"
+        choices=["ingest", "transform", "year-summary", "outflow", "all"],
+        help="Select which step to run: ingest, transform, year-summary, outflow, or all"
     )
     parser.add_argument(
         "--limit",
@@ -35,6 +35,10 @@ def main() -> None:
     if args.mode in ("transform", "all", "outflow"):
         create_summary_table()
         print("Created analytics.migration_summary")
+
+    if args.mode == "year-summary":
+        create_year_summary_table()
+        print("Created analytics.year_migration_summary")
 
     if args.mode == "all":
         trend = fetch_recent_trend(args.limit)

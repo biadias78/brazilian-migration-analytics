@@ -1,14 +1,24 @@
 import csv
 import zipfile
 from pathlib import Path
-from urllib.parse import urlparse
 
 import duckdb
 import numpy as np
 import pandas as pd
 import requests
 
-from .config import CLEAN_CSV_FILE, CSV_FILE, CSV_SOURCE, CSV_TABLE, DB_FILE, DATA_DIR, ZIP_FILE
+from .config import (
+    CLEAN_CSV_FILE,
+    CSV_FILE,
+    CSV_SOURCE,
+    CSV_TABLE,
+    DB_FILE,
+    DATA_DIR,
+    ZIP_FILE,
+    SOURCE_FILE,
+    UNDESA_DB_FILE,
+    UNDESA_TABLE,
+)
 
 
 def ensure_directories() -> None:
@@ -16,17 +26,53 @@ def ensure_directories() -> None:
     DB_FILE.parent.mkdir(parents=True, exist_ok=True)
 
 
+def find_source_path() -> Path:
+    if SOURCE_FILE.exists():
+        return SOURCE_FILE
+
+    excel_files = sorted(DATA_DIR.rglob("*.xlsx")) + sorted(DATA_DIR.rglob("*.xls"))
+    if excel_files:
+        for candidate in excel_files:
+            if "undesa" in candidate.name.lower():
+                return candidate
+        return excel_files[0]
+
+    csv_files = sorted(DATA_DIR.rglob("*.csv"))
+    if csv_files:
+        return csv_files[0]
+
+    zip_files = sorted(DATA_DIR.rglob("*.zip"))
+    if zip_files:
+        return zip_files[0]
+
+    raise FileNotFoundError(
+        f"No source file found in {DATA_DIR}. Search paths: *.xlsx, *.xls, *.csv, *.zip"
+    )
+
+
 def cleanup_previous() -> None:
-    for path in [CLEAN_CSV_FILE, DB_FILE, ZIP_FILE]:
+    for path in {CLEAN_CSV_FILE, DB_FILE, UNDESA_DB_FILE, ZIP_FILE}:
         if path.exists():
             path.unlink()
     if CSV_FILE.exists() and CSV_FILE != Path(CSV_SOURCE):
         CSV_FILE.unlink()
 
 
+def find_year_csv_paths() -> list[Path]:
+    paths = [
+        path for path in sorted(DATA_DIR.rglob("*.csv"))
+        if path.name not in {CSV_FILE.name, CLEAN_CSV_FILE.name}
+    ]
+    return [path for path in paths if path.is_file()]
+
+
+def quote_column(name: str) -> str:
+    return '"' + name.replace('"', '""') + '"'
+
+
 def download_csv() -> Path:
     ensure_directories()
-    source_path = Path(CSV_SOURCE)
+    source_path = find_source_path()
 
     if source_path.exists():
         if source_path.suffix.lower() == ".zip":
@@ -99,8 +145,11 @@ def build_clean_csv(source_path: Path) -> Path:
 
 
 def read_excel_source(source_path: Path) -> pd.DataFrame:
+    # Only read the worksheet that the pipeline expects (Table 1)
     df = pd.read_excel(source_path, sheet_name="Table 1", header=10, engine="openpyxl")
-    return tidy_excel_dataframe(df)
+    tidy = tidy_excel_dataframe(df)
+    tidy["sheet_name"] = "Table 1"
+    return tidy
 
 
 def tidy_excel_dataframe(df: pd.DataFrame) -> pd.DataFrame:
@@ -176,6 +225,77 @@ def load_csv_to_duckdb() -> None:
     conn.close()
 
 
+def load_year_csvs_to_duckdb() -> None:
+    year_csv_paths = find_year_csv_paths()
+    if not year_csv_paths:
+        raise FileNotFoundError(f"No year CSV files found under {DATA_DIR}")
+
+    ensure_directories()
+    conn = duckdb.connect(database=str(DB_FILE))
+    conn.execute("CREATE SCHEMA IF NOT EXISTS analytics")
+
+    data_frames = []
+    seen = set()
+    superset_columns = []
+
+    for path in year_csv_paths:
+        df = pd.read_csv(
+            path,
+            header=0,
+            encoding="utf-8",
+            engine="python",
+            sep=",",
+            quotechar='"',
+            skipinitialspace=True,
+            dtype=str,
+            keep_default_na=False,
+            na_filter=False,
+        )
+        df.columns = [col.strip() for col in df.columns]
+        df["data_period"] = path.parent.name
+        df["source_file"] = path.name
+        data_frames.append((path, df))
+
+        for col in df.columns:
+            if col not in seen:
+                seen.add(col)
+                superset_columns.append(col)
+
+    if not superset_columns:
+        conn.close()
+        raise ValueError("Unable to infer columns from year CSV files")
+
+    normalized_frames = []
+    for _, df in data_frames:
+        normalized_frames.append(df.reindex(columns=superset_columns))
+
+    combined = pd.concat(normalized_frames, ignore_index=True)
+    conn.register("year_df", combined)
+    conn.execute(f"CREATE OR REPLACE TABLE {CSV_TABLE} AS SELECT * FROM year_df")
+    conn.unregister("year_df")
+    conn.close()
+
+
+def load_undesa_to_duckdb() -> None:
+    source_path = find_source_path()
+    ensure_directories()
+    conn = duckdb.connect(database=str(DB_FILE))
+    conn.execute("CREATE SCHEMA IF NOT EXISTS analytics")
+
+    if source_path.suffix.lower() in {".xlsx", ".xls"}:
+        df = read_excel_source(source_path)
+        conn.register("source_df", df)
+        conn.execute(f"CREATE OR REPLACE TABLE {UNDESA_TABLE} AS SELECT * FROM source_df")
+        conn.unregister("source_df")
+    else:
+        clean_path = build_clean_csv(source_path)
+        conn.execute(
+            f"CREATE OR REPLACE TABLE {UNDESA_TABLE} AS SELECT * FROM read_csv_auto('{clean_path}', header=True)"
+        )
+    conn.close()
+
+
 def ingest() -> None:
     cleanup_previous()
-    load_csv_to_duckdb()
+    load_year_csvs_to_duckdb()
+    load_undesa_to_duckdb()

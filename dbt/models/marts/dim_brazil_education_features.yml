@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: dim_brazil_education_features
+    description: "Brazil outflow aggregated by education group and year, for education-related prediction features."
+    columns:
+      - name: education_group
+        description: "Education group or data type for migrants leaving Brazil."
+      - name: year
+        description: "Year of the migration record."
+      - name: total_migrants
+        description: "Total migrants leaving Brazil for the education group in the year."
+      - name: total_male
+        description: "Total male migrants in the education group leaving Brazil."
+      - name: total_female
+        description: "Total female migrants in the education group leaving Brazil."
+      - name: row_count
+        description: "Number of source rows aggregated into the education group record."
+      - name: male_ratio
+        description: "Share of male migrants among the education group outflow."
+      - name: female_ratio
+        description: "Share of female migrants among the education group outflow."

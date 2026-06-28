@@ -1,81 +1,140 @@
-# brazilian-migration-analytics
-This project provides an automated data pipeline to analyze Brazilian emigration trends over the last decade. It identifies primary destination countries and performs trend analysis to forecast future migration patterns. This repository showcases end-to-end data engineering practices, from raw data extraction to analytical modeling.
+# Brazilian Migration Analytics Pipeline
 
-## Docker
+This project is a containerized data engineering pipeline designed to process and analyze Brazilian migration data. It leverages **Python 3.13**, **DuckDB** for lightning-fast local analytics storage, and **dbt (data build tool)** for data transformation modeling.
 
-Build the image:
+---
 
-```bash
-docker build -t brazilian-migration-analytics:latest .
-```
+## 🛠️ Tech Stack & Prerequisites
 
-Run a container in the background and mount the project directory:
+* **Language:** Python 3.13 (Slim-Linux base)
 
-```bash
-docker run -d --name brazil-analytics -v "$PWD":/app -w /app brazilian-migration-analytics:latest tail -f /dev/null
-```
 
-Run the pipeline directly inside the container:
+* **Database & Transformation:** DuckDB + `dbt-duckdb`
 
-```bash
-docker exec brazil-analytics python -m src.main all
-```
+* **Orchestration & Processing:** Pandas, NumPy, Requests
 
-Open a shell inside the running container:
 
-```bash
-docker exec -it brazil-analytics bash
-```
+* **Containerization:** Docker & Docker Compose
 
-Stop and remove the container when finished:
 
-```bash
-docker stop brazil-analytics && docker rm brazil-analytics
-```
 
-## Development
+### Prerequisites
 
-The Python code lives in `src/`.
+Ensure you have the following installed on your host machine:
 
-### Dataset
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/) (or Docker Engine with Compose plugin)
 
-This project expects you to download the raw source data yourself and place it in the `data/` directory.
 
-Supported data forms:
+* [VS Code](https://code.visualstudio.com/) with the **Dev Containers** extension (optional, for containerized development)
 
-- `data/undesa_pd_2024_ims_stock_by_sex_destination_and_origin.xlsx`
 
-Download the source file from:
 
-https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/undesa_pd_2024_ims_stock_by_sex_destination_and_origin.xlsx
+---
 
-For the UN Excel source, the pipeline reads `Table 1` and reshapes the wide year columns into a tidy format.
+## 🚀 Getting Started
 
-> Important: the data file is not tracked in git. Keep your raw files in `data/` only.
+### 1. Project Setup
 
-### Install dependencies locally
-
-If you want a local dev environment, install dependencies with pip or a virtual environment. Example:
+Clone this repository to your local machine and navigate into the root directory:
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip setuptools wheel
-pip install duckdb pandas openpyxl numpy requests
+cd brazilian-migration-analytics
+
 ```
 
-The Docker image is also updated to install `duckdb`, `pandas`, `openpyxl`, `numpy`, and `requests`.
+### 2. Launch the Environment
 
-### Run the pipeline
+Use Docker Compose to build the image and spin up the background container. This automatically mounts your local workspace into the container at `/app`:
 
-Use the main module to ingest and transform data:
+```bash
+docker compose up -d --build
+```
+
+---
+
+## 🏃‍♂️ Running the Pipeline
+
+Once the container is up and running, you can execute commands directly inside it using `docker compose exec`.
+
+### Run the Main Python Pipeline
+
+To run the full ingestion and execution sequence defined in your source code:
+
+```bash
+docker compose exec brazil-analytics python -m src.main all
+```
+
+or you can attach the shell to the docker container manually then run:
 
 ```bash
 python -m src.main all
 ```
 
-### Notes
+### Run dbt Models
 
-- The ingestion code loads the UN Excel migration dataset from `data/undesa_pd_2024_ims_stock_by_sex_destination_and_origin.xlsx` and stores it in DuckDB.
-- The transform step creates a summary table in DuckDB at `analytics.migration_summary`.
-- The project uses `src/config.py` for paths and DuckDB configuration.
+Because the environment is pre-configured with `dbt-duckdb`, you can execute dbt commands seamlessly:
+
+* **Check dbt version and connection:**
+
+```bash
+docker compose exec brazil-analytics dbt --version
+
+```
+
+
+* **Run data transformation models:**
+
+```bash
+docker compose exec brazil-analytics dbt run
+
+```
+
+
+* **Test data quality:**
+
+```bash
+docker compose exec brazil-analytics dbt test
+
+```
+
+
+
+### Interactive Debugging (Shell Access)
+
+If you need to explore files or run ad-hoc scripts inside the isolated Linux environment, open a bash session:
+
+```bash
+docker compose exec brazil-analytics bash
+
+```
+
+---
+
+## 🧹 Maintenance & Reset Commands
+
+Use these commands to manage, stop, or completely refresh your Docker environment.
+
+### Stop the Container
+
+To stop the environment without deleting images or data:
+
+```bash
+docker compose stop
+
+```
+
+### Start Clean (Full Reset)
+
+If you modify the `Dockerfile`, update packages, or want to wipe out the environment to start completely fresh, execute the following block:
+
+```bash
+# 1. Bring down the container and associated networks
+docker compose down
+
+# 2. Remove the project image
+docker rmi brazilian-migration-analytics:latest
+
+# 3. Clear out unused Docker build cache to force a fresh pull
+docker builder prune -f
+
+```

@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: undesa_source
+    schema: analytics
+    tables:
+      - name: undesa_migration
+        description: "UNDESA stock migration source table."
+  
+  - name: year_folder_source
+    schema: analytics
+    description: "Consolidated migration data from year-folder CSV files."
+    tables:
+      - name: brazil_net_migration
+        description: "Year-folder migration source table loaded from yearly CSV files."

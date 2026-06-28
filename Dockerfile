@@ -17,11 +17,13 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN python -m pip install --upgrade pip setuptools wheel \
-    && pip install duckdb pandas openpyxl numpy requests
+    && pip install duckdb dbt-duckdb pandas openpyxl numpy requests
 
 RUN groupadd --gid 1000 appuser \
     && useradd --uid 1000 --gid appuser --shell /bin/bash --create-home appuser \
     && chown -R appuser:appuser /app
+
+ENV PATH="/home/appuser/.local/bin:${PATH}"    
 
 USER appuser
 

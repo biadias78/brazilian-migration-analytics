@@ -1,0 +1,9 @@
+services:
+  brazil-analytics:
+    build: .
+    container_name: brazil-analytics
+    volumes:
+      - .:/app
+    # tail -f /dev/null keeps the container running in the background
+    command: tail -f /dev/null
+    working_dir: /app

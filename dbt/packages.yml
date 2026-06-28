@@ -1,0 +1,6 @@
+# This file is used to specify packages that should be installed from the dbt Hub.
+# Run `dbt deps` to install the dependencies defined in this file.
+
+packages:
+  - package: dbt-labs/dbt_utils
+    version: 0.9.6
