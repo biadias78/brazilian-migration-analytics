@@ -3,7 +3,7 @@ brazilian_migration:
   outputs:
     dev:
       type: duckdb
-      path: duckdb/brazil_migration.duckdb
+      path: ../duckdb/brazil_migration.duckdb
       schema: analytics
       threads: 1
       connection_parameters: {}

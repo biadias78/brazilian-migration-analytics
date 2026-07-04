@@ -3,8 +3,8 @@ version: '1.0'
 config-version: 2
 profile: brazilian_migration
 
-model-paths: ["dbt/models"]
-analysis-paths: []
+model-paths: ["models"]
+analysis-paths: ["analyses"]
 test-paths: ["tests"]
 seed-paths: ["data"]
 macro-paths: ["macros"]

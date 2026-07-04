@@ -3,7 +3,7 @@
 with staged as (
     select *
     from {{ ref('stg_migration_stock') }}
-    where lower(origin) like '%brazil%' or lower(origin_code) = 'bra'
+    where lower(cast(origin as varchar)) like '%brazil%' or lower(cast(origin_code as varchar)) = 'bra'
 )
 
 select
