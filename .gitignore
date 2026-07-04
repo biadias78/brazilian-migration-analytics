@@ -28,3 +28,10 @@ dist/
 
 # Logs
 *.log
+
+#dbt
+dbt_packages/
+logs/
+target/
+dbt_modules/
+*.DS_Store
