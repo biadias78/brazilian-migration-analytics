@@ -3,4 +3,4 @@
 
 packages:
   - package: dbt-labs/dbt_utils
-    version: 0.9.6
+    version: 1.4.1

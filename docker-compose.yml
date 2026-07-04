@@ -1,6 +1,8 @@
 services:
   brazil-analytics:
     build: .
+    ports:
+      - "8888:8888"
     container_name: brazil-analytics
     volumes:
       - .:/app

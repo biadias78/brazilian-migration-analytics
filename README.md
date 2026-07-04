@@ -97,7 +97,10 @@ docker compose exec brazil-analytics dbt test
 
 ```
 
-
+### Run Jupyter Notebook
+```bash
+docker compose exec brazil-analytics jupyter lab --ip 0.0.0.0 --port 8888 --no-browser --allow-root
+```
 
 ### Interactive Debugging (Shell Access)
 
