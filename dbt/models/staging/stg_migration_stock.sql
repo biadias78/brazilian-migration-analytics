@@ -8,8 +8,6 @@ with source_data as (
 select
     destination,
     origin,
-    coverage,
-    data_type,
     destination_code,
     origin_code,
     cast(year as integer) as year,

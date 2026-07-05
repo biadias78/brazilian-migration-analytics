@@ -6,8 +6,6 @@ models:
     columns:
       - name: destination
         description: "Destination country or region for migrants leaving Brazil."
-      - name: destination_code
-        description: "Destination location code for migrants leaving Brazil."
       - name: year
         description: "Year of the migration record."
       - name: total_migrants

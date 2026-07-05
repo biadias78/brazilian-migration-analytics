@@ -3,7 +3,6 @@
 with brazil_outflow as (
     select *
     from {{ ref('stg_migration_stock') }}
-    where lower(cast(origin as varchar)) like '%brazil%' or lower(cast(origin_code as varchar)) = 'bra'
 )
 
 select

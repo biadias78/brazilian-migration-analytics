@@ -3,7 +3,6 @@
 with brazil_outflow as (
     select *
     from {{ ref('stg_migration_stock') }}
-    where lower(cast(origin as varchar)) like '%brazil%' or lower(cast(origin_code as varchar)) = 'bra'
 )
 
 select
@@ -14,5 +13,6 @@ select
     case when sum(total) is null or sum(total) = 0 then null else sum(male) / sum(total) end as male_ratio,
     case when sum(total) is null or sum(total) = 0 then null else sum(female) / sum(total) end as female_ratio
 from brazil_outflow
+where lower(cast(origin as varchar)) like '%brazil%'
 group by year
 order by year

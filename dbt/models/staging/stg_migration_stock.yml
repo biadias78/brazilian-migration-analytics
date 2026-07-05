@@ -8,8 +8,6 @@ models:
         description: "Cleaned destination country or region."
       - name: origin
         description: "Cleaned origin country or region."
-      - name: coverage
-        description: "Coverage label retained from the source."
       - name: data_type
         description: "Migration stock data type retained from the source."
       - name: destination_code
