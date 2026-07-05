@@ -3,6 +3,7 @@
 with staged as (
     select *
     from {{ ref('stg_year_folder') }}
+where lower(coub) like '%bra%' or lower(coub) like '%brazil%'
 )
 
 select
@@ -42,4 +43,3 @@ select
     skill_occ,
     overqualified
 from staged
-where lower(coub) like '%bra%' or lower(coub) like '%brazil%'
