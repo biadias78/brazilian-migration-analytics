@@ -4,73 +4,73 @@ models:
   - name: stg_year_folder
     description: "Staging model that preserves the year-folder source columns and prepares them for downstream modeling."
     columns:
-      - name: country
-        description: "Destination country code or label from the year-folder data."
-      - name: coub
-        description: "Origin country code from the year-folder data."
-      - name: fborn
-        description: "Birth country flag or code from the year-folder data."
-      - name: edu_lfs
-        description: "Education classification from the year-folder data."
-      - name: edu_cen
-        description: "Additional education classification from the year-folder data."
-      - name: age_lfs
-        description: "Age classification from the year-folder data."
-      - name: age_cen
-        description: "Additional age classification from the year-folder data."
-      - name: nat
-        description: "Nationality code or label from the year-folder data."
-      - name: number
-        description: "Migrants count from the year-folder data."
-      - name: reg_oecd
-        description: "OECD region code from the year-folder data."
-      - name: reg_regions
-        description: "Regional classification from the year-folder data."
+      - name: destination_country
+        description: "Destination country name or code (renamed from `country`)."
+      - name: origin_country_code
+        description: "Origin country ISO/code (renamed from `coub`)."
+      - name: birth_country_code
+        description: "Birth country code (renamed from `fborn`)."
+      - name: education_level
+        description: "High-level education classification (renamed from `edu_lfs`)."
+      - name: education_detail
+        description: "Additional education classification (renamed from `edu_cen`)."
+      - name: age_group
+        description: "Age bucket (renamed from `age_lfs`)."
+      - name: age_detail
+        description: "Additional age classification (renamed from `age_cen`)."
+      - name: nationality_code
+        description: "Nationality code or label (renamed from `nat`)."
+      - name: total_migrants
+        description: "Total migrants count (renamed from `number`)."
+      - name: oecd_region
+        description: "OECD region (renamed from `reg_oecd`)."
+      - name: region
+        description: "Regional classification (renamed from `reg_regions`)."
       - name: sex
-        description: "Sex classification from the year-folder data."
-      - name: dos_lfs
-        description: "Additional demographic classification from the year-folder data."
-      - name: dos_cen
-        description: "Additional demographic classification from the year-folder data."
-      - name: lfs_lfs
-        description: "Labor force status classification from the year-folder data."
+        description: "Sex classification."
+      - name: demo_lfs
+        description: "Additional demographic classification (renamed from `dos_lfs`)."
+      - name: demo_cen
+        description: "Additional demographic classification (renamed from `dos_cen`)."
+      - name: labor_force_status
+        description: "Labor force status (renamed from `lfs_lfs`)."
       - name: occupation
-        description: "Occupation code from the year-folder data."
+        description: "Occupation code."
       - name: sector
-        description: "Sector classification from the year-folder data."
-      - name: field_edu
-        description: "Field of education from the year-folder data."
-      - name: national
-        description: "Nationality flag from the year-folder data."
+        description: "Sector classification."
+      - name: field_of_education
+        description: "Field of education (renamed from `field_edu`)."
+      - name: national_flag
+        description: "Nationality flag (renamed from `national`)."
       - name: nationality
-        description: "Nationality label from the year-folder data."
+        description: "Nationality label."
       - name: age
-        description: "Age from the year-folder data."
-      - name: edu_detailed
-        description: "Detailed education classification from the year-folder data."
-      - name: birth
-        description: "Birth classification from the year-folder data."
-      - name: oecd
-        description: "OECD region indicator from the year-folder data."
-      - name: oecdb
-        description: "Secondary OECD region field from the year-folder data."
+        description: "Age in years."
+      - name: education_detailed
+        description: "Detailed education classification (renamed from `edu_detailed`)."
+      - name: birth_place
+        description: "Birth classification/place (renamed from `birth`)."
+      - name: oecd_indicator
+        description: "OECD indicator (renamed from `oecd`)."
+      - name: oecd_secondary
+        description: "Secondary OECD region field (renamed from `oecdb`)."
       - name: source
-        description: "Source label from the year-folder data."
-      - name: regionb
-        description: "Region classification from the year-folder data."
-      - name: recent
-        description: "Recent migrant classification from the year-folder data."
-      - name: lfs
-        description: "Labor force status code from the year-folder data."
+        description: "Source label."
+      - name: region_b
+        description: "Region classification (renamed from `regionb`)."
+      - name: recent_migrant
+        description: "Recent migrant flag (renamed from `recent`)."
+      - name: lfs_code
+        description: "Labor force status code (renamed from `lfs`)."
       - name: occ_08
-        description: "Occupation classification from the year-folder data."
+        description: "Occupation classification code."
       - name: occ_1d
-        description: "Detailed occupation code from the year-folder data."
+        description: "Detailed occupation code."
       - name: occ_other
-        description: "Other occupation text from the year-folder data."
+        description: "Other occupation text."
       - name: occ_88
-        description: "Legacy occupation category from the year-folder data."
-      - name: skill_occ
-        description: "Skill classification for occupation from the year-folder data."
+        description: "Legacy occupation category."
+      - name: skill_occupation
+        description: "Skill classification for occupation (renamed from `skill_occ`)."
       - name: overqualified
-        description: "Overqualification indicator from the year-folder data."
+        description: "Overqualification indicator."

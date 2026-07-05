@@ -6,71 +6,106 @@ models:
     columns:
       - name: country
         description: "Destination country code or name from the year-folder data."
+        example: "Brazil"
       - name: coub
         description: "Origin country code from the year-folder data."
+        example: "BRA"
       - name: fborn
         description: "Birth country flag or code from the year-folder data."
+        example: "BRA"
       - name: edu_lfs
         description: "Education classification from the year-folder data."
+        example: "Tertiary"
       - name: edu_cen
         description: "Additional education classification from the year-folder data."
+        example: "University degree"
       - name: age_lfs
         description: "Age classification from the year-folder data."
+        example: "25-29"
       - name: age_cen
         description: "Additional age classification from the year-folder data."
+        example: "25-29"
       - name: nat
         description: "Nationality code or label from the year-folder data."
+        example: "Brazilian"
       - name: number
         description: "Migrants count from the year-folder data."
+        example: 12345
       - name: reg_oecd
         description: "OECD region code from the year-folder data."
+        example: "Latin America"
       - name: reg_regions
         description: "Regional classification from the year-folder data."
+        example: "South America"
       - name: sex
         description: "Sex classification from the year-folder data."
+        example: "Female"
       - name: dos_lfs
         description: "Additional demographic classification from the year-folder data."
+        example: "Employed"
       - name: dos_cen
         description: "Additional demographic classification from the year-folder data."
+        example: "Working"
       - name: lfs_lfs
         description: "Labor force status classification from the year-folder data."
+        example: "Participating"
       - name: occupation
         description: "Occupation code from the year-folder data."
+        example: "Professional"
       - name: sector
         description: "Sector classification from the year-folder data."
+        example: "Services"
       - name: field_edu
         description: "Field of education from the year-folder data."
+        example: "Engineering"
       - name: national
         description: "Nationality flag from the year-folder data."
+        example: "National"
       - name: nationality
         description: "Nationality label from the year-folder data."
+        example: "Brazilian"
       - name: age
         description: "Age from the year-folder data."
+        example: 27
       - name: edu_detailed
         description: "Detailed education classification from the year-folder data."
+        example: "Higher education"
       - name: birth
         description: "Birth classification from the year-folder data."
+        example: "Brazil"
       - name: oecd
         description: "OECD region indicator from the year-folder data."
+        example: "OECD"
       - name: oecdb
         description: "Secondary OECD region field from the year-folder data."
+        example: "Latin America"
       - name: source
         description: "Source label from the year-folder data."
+        example: "Year folder CSV"
       - name: regionb
         description: "Region classification from the year-folder data."
+        example: "Latin America"
       - name: recent
         description: "Recent migrant classification from the year-folder data."
+        example: "Yes"
       - name: lfs
         description: "Labor force status code from the year-folder data."
+        example: "Active"
       - name: occ_08
         description: "Occupation classification from the year-folder data."
+        example: "1234"
       - name: occ_1d
         description: "Detailed occupation code from the year-folder data."
+        example: "12345"
       - name: occ_other
         description: "Other occupation text from the year-folder data."
+        example: "Other occupation"
       - name: occ_88
         description: "Legacy occupation category from the year-folder data."
+        example: "Unknown"
       - name: skill_occ
         description: "Skill classification for occupation from the year-folder data."
+        example: "High skill"
       - name: overqualified
         description: "Overqualification indicator from the year-folder data."
+        example: "No"

@@ -8,14 +8,11 @@ This project is a containerized data engineering pipeline designed to process an
 
 * **Language:** Python 3.13 (Slim-Linux base)
 
-
 * **Database & Transformation:** DuckDB + `dbt-duckdb`
 
 * **Orchestration & Processing:** Pandas, NumPy, Requests
 
-
 * **Containerization:** Docker & Docker Compose
-
 
 
 ### Prerequisites
@@ -24,10 +21,7 @@ Ensure you have the following installed on your host machine:
 
 * [Docker Desktop](https://www.docker.com/products/docker-desktop/) (or Docker Engine with Compose plugin)
 
-
 * [VS Code](https://code.visualstudio.com/) with the **Dev Containers** extension (optional, for containerized development)
-
-
 
 ---
 

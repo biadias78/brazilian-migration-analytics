@@ -4,8 +4,6 @@ models:
   - name: dim_brazil_education_features
     description: "Brazil outflow aggregated by education group and year, for education-related prediction features."
     columns:
-      - name: education_group
-        description: "Education group or data type for migrants leaving Brazil."
       - name: year
         description: "Year of the migration record."
       - name: total_migrants

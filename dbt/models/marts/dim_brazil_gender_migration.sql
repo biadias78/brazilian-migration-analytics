@@ -6,7 +6,6 @@ with brazil_outflow as (
 )
 
 select
-    coalesce(data_type, 'unknown') as education_group,
     year,
     sum(total) as total_migrants,
     sum(male) as total_male,
